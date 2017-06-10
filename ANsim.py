@@ -75,6 +75,39 @@ def adnauseamwithmana(deckstats, life, turn, draw):
             cards += 1;
     return [cards, mana]
 
+def htan(deckstats, life, turn, draw):
+    cards = 0;
+    mana = 0;
+    deck = makedeck(deckstats) + list(hramps.keys());
+    random.shuffle(deck)
+    ramp = [];
+    ht = False;
+    for i in range(6 + turn + draw):
+        deck.pop();
+    while life >= max([i for i in deck if isinstance(i, int)]):
+        card = deck.pop();
+        if card == 'HT':
+            life -= hramps[card][0];
+            mana += hramps[card][1];
+            cards += 1;
+            ht = True;
+        elif card in hramps.keys():
+            life -= hramps[card][0];
+            mana += hramps[card][1];
+            cards += 1;
+            ramp.append(card);
+        else:
+            life -= card;
+            cards += 1;
+    if ht:
+        if ('FS' in ramp and 'CT' in ramp):
+            mana += 5;
+        elif 'FS' in ramp:
+            mana += 2;
+        elif 'CT'in ramp:
+            mana += 2;
+    return [cards, mana]
+
 def repeatsimulationswithmana(n, deckstats, life, turn, draw):
     results = {};
     for base in range(50):
@@ -82,6 +115,16 @@ def repeatsimulationswithmana(n, deckstats, life, turn, draw):
     resultslist = [];
     for a in range(n):
         resultslist.append(adnauseamwithmana(deckstats, life, turn, draw));
+    big5.append(resultslist);
+    return
+
+def repeatsimulationswithht(n, deckstats, life, turn, draw):
+    results = {};
+    for base in range(50):
+        results[base] = 0;
+    resultslist = [];
+    for a in range(n):
+        resultslist.append(htan(deckstats, life, turn, draw));
     big5.append(resultslist);
     return
 
@@ -93,6 +136,7 @@ def confint2(arr):
     return
 
 ramps = {'CM':[0,1], 'GM':[2,1], 'LP':[0,1], 'MC':[0,2], 'MV':[1,2], 'MD':[0,1], 'SR':[1,2], 'MO':[0,1], 'DR':[1,2], 'CR':[2,3]}
+hramps = {'CM':[0,1], 'GM':[2,1], 'LP':[0,1], 'MC':[0,2], 'MV':[1,2], 'MD':[0,1], 'SR':[1,2], 'MO':[0,1], 'DR':[1,2], 'CR':[2,3], 'HT':[1,0], 'FS':[3,0], 'CT':[1,0]}
 
 shimmerzur = [35, 26, 25, 9, 2, 1, 0]
 gitrog = [42, 26, 17, 10, 0, 2, 0, 0, 0, 0, 1]
@@ -112,9 +156,9 @@ zurm = [31, 23, 23, 9, 2, 1, 0]
 paradoxm = [32, 27, 27, 9, 1, 2]
 jelevam = [30, 22, 19, 12, 2, 3, 1]
 
-zurms = repeatsimulationswithmana(100000, zurm, 30, 5, 5)
+zurms = repeatsimulationswithht(100000, zurm, 30, 5, 5)
 paradoxms = repeatsimulationswithmana(100000, paradoxm, 30, 5, 5)
-jelevams = repeatsimulationswithmana(100000, jelevam, 30, 5, 5)
+jelevams = repeatsimulationswithht(100000, jelevam, 30, 5, 5)
 
 
 
