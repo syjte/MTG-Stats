@@ -13,6 +13,6 @@ To use the ANsim2, the TappedOut list needs a specially configured custom catego
   5) #Draw for anything that draws a card
   6) #Counter for anything that counters
   7) #Combo for combo pieces.
-  7) #0 for anything else.
+  7) #0 for anything else. Ad Nauseam falls in this category - this card needs to be in the deck for the simulation to work.
   
 Copy the base tappedout url without any of the category filters and paste it in the code, then run everything and you can start the simulations.
